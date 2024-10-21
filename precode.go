@@ -23,7 +23,7 @@ func Generator(ctx context.Context, ch chan<- int64, fn func(int64)) {
 			return
 		case ch <- i:
 			fn(i)
-			atomic.AddInt64(&i, 1)
+			i++
 		}
 	}
 }
@@ -79,7 +79,7 @@ func main() {
 
 			for v := range in{
 				chOut <- v
-				atomic.AddInt64(&amounts[i], 1)
+				amounts[i]++
 			}
 		}(outs[i], int64(i))
 	}
@@ -95,8 +95,8 @@ func main() {
 	var sum int64   // сумма чисел результирующего канала
 
 	for v := range chOut {
-		atomic.AddInt64(&count, 1)
-		atomic.AddInt64(&sum, v)
+		count++
+		sum += v
 	}
 
 	fmt.Println("Количество чисел", inputCount, count)
